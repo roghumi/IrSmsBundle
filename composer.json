@@ -1,5 +1,5 @@
 {
-    "name": "peyman/ir-sms-bundle",
+    "name": "roghumi/ir-sms-bundle",
     "description": "Iran Sms Providers for Mautic",
     "type": "mautic-plugin",
     "version": "1.0.0",
