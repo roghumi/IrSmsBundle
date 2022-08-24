@@ -1,0 +1,19 @@
+{
+    "name": "peyman/ir-sms-bundle",
+    "description": "Iran Sms Providers for Mautic",
+    "type": "mautic-plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "MauticPlugin\\IrSmsBundle\\": "src/"
+        }
+    },
+    "authors": [{
+        "name": "peynman",
+        "email": "peynman.net@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "require": {
+    }
+}
