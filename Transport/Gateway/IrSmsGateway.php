@@ -38,7 +38,7 @@ interface IrSmsGateway
      */
     public function config(
         Configuration $conf,
-        Logger $logger,
+        Logger $logger
     );
 
     /**

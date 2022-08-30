@@ -1,4 +1,4 @@
-<?
+<?php
 
 return [
     'name'        => 'Iran Sms Providers',
@@ -118,5 +118,6 @@ return [
         'irsms_api_secret' => null,
         'irsms_api_number' => null,
         'irsms_api_pattern' => null,
+        'irsms_api_tokens' => [],
     ],
 ];
