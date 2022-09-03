@@ -11,6 +11,7 @@ use MauticPlugin\IrSmsBundle\Transport\Gateway\KaveNegar\KaveNegarLookupGateway;
 use MauticPlugin\IrSmsBundle\Transport\Gateway\MizbanSms\MizbanSmsGateway;
 use MauticPlugin\IrSmsBundle\Transport\Gateway\SmsIr\SmsIrLookupGateway;
 use MauticPlugin\IrSmsBundle\Transport\Gateway\SmsIr\SMSIRSimpleGateway;
+use MauticPlugin\IrSmsBundle\Transport\Gateway\Ippanel\IppanelGateway;
 use Monolog\Logger;
 
 /**
@@ -28,6 +29,7 @@ interface IrSmsGateway
         'mautic.integration.irsms.farazsms' => FarazSmsGateway::class,
         'mautic.integration.irsms.smsir_lookup' => SmsIrLookupGateway::class,
         'mautic.integration.irsms.smsir_send' => SmsIrSimpleGateway::class,
+        'mautic.integration.irsms.ippanel' => IppanelGateway::class,
     ];
 
     /**
