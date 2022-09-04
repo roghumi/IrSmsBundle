@@ -67,8 +67,8 @@ class IrSmsTransport implements TransportInterface
     public function sendSms(Lead $lead, $content)
     {
         $targetPlatform = $this->config->getPlatform();
-        if (isset(IrSmsGateway::GATEWAYS[$targetPlatform])) {
-            $platformClass = IrSmsGateway::GATEWAYS[$targetPlatform];
+        if (isset($targetPlatform)) {
+            $platformClass = $targetPlatform;
             /** @var IrSmsGateway $platform */
             $platform = new $platformClass();
             $platform->config($this->config, $this->logger);

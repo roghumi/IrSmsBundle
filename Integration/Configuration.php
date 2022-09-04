@@ -144,12 +144,14 @@ class Configuration
         }
 
         $featureSettings = $config->getFeatureSettings();
-        $this->apiKey = isset($featureSettings['irsms_api_key']) ? $featureSettings['irsms_api_key'] : null;
+        $apikeys = $config->getApiKeys();
+        if(!empty($featureSettings['integration']))$featureSettings = $featureSettings['integration'];
+        $this->apiKey = isset($apikeys['irsms_api_key']) ? $apikeys['irsms_api_key'] : null;
         if (is_null($this->apiKey)) {
             throw new BadConfigurationException();
         }
 
-        $this->apiSecret = isset($featureSettings['irsms_api_secret']) ? $featureSettings['irsms_api_secret'] : null;
+        $this->apiSecret = isset($apikeys['irsms_api_secret']) ? $apikeys['irsms_api_secret'] : null;
         $this->apiNumber = isset($featureSettings['irsms_api_number']) ? $featureSettings['irsms_api_number'] : null;
         $this->apiPattern = isset($featureSettings['irsms_api_pattern']) ? $featureSettings['irsms_api_pattern'] : null;
         $this->apiPlatform = isset($featureSettings['irsms_platform']) ? $featureSettings['irsms_platform'] : null;

@@ -13,8 +13,20 @@ use Mautic\IntegrationsBundle\Integration\ConfigurationTrait;
 use Mautic\IntegrationsBundle\Integration\BC\BcIntegrationSettingsTrait;
 use Mautic\IntegrationsBundle\Integration\Interfaces\BasicInterface;
 use MauticPlugin\IrSmsBundle\Transport\Gateway\IrSmsGateway;
+use Mautic\IntegrationsBundle\Integration\Interfaces\ConfigFormAuthInterface;
+use Mautic\IntegrationsBundle\Integration\Interfaces\ConfigFormFeatureSettingsInterface;
+use Mautic\IntegrationsBundle\Integration\Interfaces\ConfigFormSyncInterface;
+use Mautic\IntegrationsBundle\Integration\Interfaces\ConfigFormFeaturesInterface;
+use MauticPlugin\IrSmsBundle\Form\Type\ConfigAuthType;
+use MauticPlugin\IrSmsBundle\Form\Type\ConfigFeaturesType;
 
-class IrSmsIntegration extends AbstractIntegration implements ConfigFormInterface, BasicInterface
+class IrSmsIntegration extends AbstractIntegration 
+      implements 
+      ConfigFormInterface, 
+      BasicInterface,
+      ConfigFormAuthInterface,
+      ConfigFormFeatureSettingsInterface, 
+      ConfigFormFeaturesInterface
 {
     use DefaultConfigFormTrait;
     use ConfigurationTrait;
@@ -150,11 +162,29 @@ class IrSmsIntegration extends AbstractIntegration implements ConfigFormInterfac
                     'label'       => 'mautic.integration.form.api_tokens',
                     'required'        => false,
                     'with_labels' => true,
+                    'option_required'=>false,
                     'attr'       => [
                         'tooltip' => 'mautic.integration.form.api_tokens_hint',
                     ],
                 ]
             );
         }
+    }
+    
+    public function getAuthConfigFormName(): string
+    {
+        return ConfigAuthType::class;
+    }
+
+    public function getFeatureSettingsConfigFormName(): string
+    {
+        return ConfigFeaturesType::class;
+    }
+
+    public function getSupportedFeatures(): array
+    {
+        return [
+            //ConfigFormFeaturesInterface::FEATURE_SYNC => 'mautic.integration.feature.sync',
+        ];
     }
 }

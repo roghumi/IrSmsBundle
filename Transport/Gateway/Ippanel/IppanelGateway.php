@@ -1,18 +1,19 @@
 <?php
 
 
-namespace MauticPlugin\IrSmsBundle\Transport\Gateway\FarazSms;
+namespace MauticPlugin\IrSmsBundle\Transport\Gateway\Ippanel;
 
 use MauticPlugin\IrSmsBundle\Transport\Gateway\IrSmsGateway;
 use Exception;
 use CurlHandle;
 use MauticPlugin\IrSmsBundle\Integration\Configuration;
 use Monolog\Logger;
+use MauticPlugin\IrSmsBundle\Transport\Gateway\Ippanel\Client\HTTPClient;
 
 /**
  * An implementation of ISMSGateway for Nexmo Provider
  */
-class FarazSmsGateway implements IrSmsGateway
+class IppanelGateway implements IrSmsGateway
 {
     /** @var Configuration */
     protected $config;
@@ -20,6 +21,24 @@ class FarazSmsGateway implements IrSmsGateway
     protected $client = null;
     /** @var Logger */
     protected $logger;
+
+    /**
+     * Client version for setting in api call user agent header
+     * @var string
+     */
+    const CLIENT_VERSION = "1.0.1";
+
+    /**
+     * Default timeout for api call
+     * @var int
+     */
+    const DEFAULT_TIMEOUT = 30;
+
+    /**
+     * Api endpoint
+     * @var string
+     */
+    const ENDPOINT = "http://rest.ippanel.com";
 
     /**
      * Undocumented function
@@ -44,9 +63,11 @@ class FarazSmsGateway implements IrSmsGateway
      */
     public function init()
     {
-        $this->client = curl_init("https://ippanel.com/services.jspd");
-        curl_setopt($this->client, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($this->client, CURLOPT_RETURNTRANSFER, true);
+        $userAgent = sprintf("IPPanel/ApiClient/%s PHP/%s",  self::CLIENT_VERSION, phpversion());
+        $this->client = new HTTPClient(self::ENDPOINT, self::DEFAULT_TIMEOUT, [
+                sprintf("Authorization: AccessKey %s", $this->config->getApiKey()),
+                sprintf("User-Agent: %s", $userAgent),
+            ]);
     }
 
     /**
@@ -59,16 +80,17 @@ class FarazSmsGateway implements IrSmsGateway
     public function sendSingle(String $number, String $message, array $options)
     {
         try {
-            curl_setopt($this->client, CURLOPT_POSTFIELDS, [
-                'uname' => $this->config->getApiKey(),
-                'pass' =>  $this->config->getApiSecret(),
-                'from' =>  $this->config->getApiNumber(),
-                'message' => $message,
-                'to' => json_encode($number),
-                'op' => 'send'
-            ]);
-            $response = curl_exec($this->client);
-            return $response;
+          $res = $this->client->post("/v1/messages", [
+              "originator" =>  $this->config->getApiNumber(),
+              "recipients" => [$number],
+              "message" => $message,
+          ]);
+
+          if (!isset($res->data->bulk_id)) {
+              throw new Exception("returned response not valid", 1);
+          }
+
+          return $res->data->bulk_id;
         } catch (Exception $ex) {
             $this->logger->error('Failed sending IrSmsBundle message', [
                 'platgorm' => self::class,

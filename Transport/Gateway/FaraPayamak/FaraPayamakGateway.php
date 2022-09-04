@@ -29,7 +29,7 @@ class FaraPayamakGateway implements IrSmsGateway
      */
     public function config(
         Configuration $conf,
-        Logger $logger,
+        Logger $logger
     ) {
         $this->logger = $logger;
         $this->config = $conf;
